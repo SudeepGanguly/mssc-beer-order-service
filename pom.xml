@@ -11,7 +11,7 @@
     <groupId>guru.springframework</groupId>
     <artifactId>mssc-beer-order-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mssc-beer-order-service</name>
+    <name>mssc-beer-or /der-service</name>
     <description>MSSC Beer Order Service</description>
 
 </project>

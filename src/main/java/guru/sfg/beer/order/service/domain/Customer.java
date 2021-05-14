@@ -18,7 +18,6 @@ package guru.sfg.beer.order.service.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
@@ -34,10 +33,10 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 public class Customer extends BaseEntity {
 
+    public Customer(){}
     @Builder
     public Customer(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate, String customerName,
                     UUID apiKey, Set<BeerOrder> beerOrders) {

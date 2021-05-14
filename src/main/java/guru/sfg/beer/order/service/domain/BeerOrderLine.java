@@ -18,7 +18,6 @@ package guru.sfg.beer.order.service.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -31,9 +30,10 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 public class BeerOrderLine extends BaseEntity {
+
+    public BeerOrderLine(){}
 
     @Builder
     public BeerOrderLine(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate,

@@ -13,6 +13,8 @@ public class JmsConfig {
 
     public static final String VALIDATE_BEER_ORDER = "validate-beer-order";
     public static final String VALIDATE_ORDER_RESULT = "validate-order-result";
+    public static final String ALLOCATE_BEER_ORDER_QUEUE = "allocate-beer-order";
+    public static final String ALLOCATE_ORDER_RESULT_QUEUE = "allocate-order-result";
 
     @Bean
     public MessageConverter messageConverter(){

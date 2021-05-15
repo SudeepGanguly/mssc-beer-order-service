@@ -20,6 +20,7 @@ import java.util.EnumSet;
 public class BeerOrderStateMachineConfig extends StateMachineConfigurerAdapter<BeerOrderStatusEnum, BeerOrderEvents> {
 
     private final Action<BeerOrderStatusEnum,BeerOrderEvents> validateOrderAction;
+    private final Action<BeerOrderStatusEnum,BeerOrderEvents> allocateOrderAction;
 
     @Override
     public void configure(StateMachineStateConfigurer<BeerOrderStatusEnum, BeerOrderEvents> states) throws Exception {
@@ -49,26 +50,13 @@ public class BeerOrderStateMachineConfig extends StateMachineConfigurerAdapter<B
                 .withExternal()
                 .source(BeerOrderStatusEnum.NEW).target(BeerOrderStatusEnum.VALIDATION_EXCEPTION)
                 .event(BeerOrderEvents.VALIDATION_FAILED)
-
           //Allocation Transitions
-          .and()
-                .withExternal()
-                .source(BeerOrderStatusEnum.VALIDATED).target(BeerOrderStatusEnum.ALLOCATED)
-                .event(BeerOrderEvents.ALLOCATION_SUCESS)
-          .and()
-                .withExternal()
-                .source(BeerOrderStatusEnum.VALIDATED).target(BeerOrderStatusEnum.ALLOCATION_EXCEPTION)
-                .event(BeerOrderEvents.ALLOCATION_FAILED)
-          .and()
-                .withExternal()
-                .source(BeerOrderStatusEnum.VALIDATED).target(BeerOrderStatusEnum.VALIDATED)
-                .event(BeerOrderEvents.ALLOCATION_NO_INVENTORY)
-
-           //Delivery Transitions
            .and()
                 .withExternal()
-                .source(BeerOrderStatusEnum.ALLOCATED).target(BeerOrderStatusEnum.PICKED_UP)
-                .event(BeerOrderEvents.BEERORDER_PICKED_UP);
+                .source(BeerOrderStatusEnum.VALIDATED).target(BeerOrderStatusEnum.ALLOCATION_PENDING)
+                .event(BeerOrderEvents.ALLOCATE_ORDER)
+                .action(allocateOrderAction);
+
     }
 
 }

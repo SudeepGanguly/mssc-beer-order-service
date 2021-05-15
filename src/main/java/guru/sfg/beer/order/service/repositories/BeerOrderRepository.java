@@ -40,5 +40,5 @@ import java.util.UUID;
         List<BeerOrder> findAllByOrderStatus(BeerOrderStatusEnum beerOrderStatusEnum);
 
         @Lock(LockModeType.PESSIMISTIC_WRITE)
-        BeerOrder findOneById(UUID id);
+        BeerOrder findOneById(String id);
     }

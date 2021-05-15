@@ -1,4 +1,4 @@
-package guru.sfg.brewery.event;
+package guru.sfg.brewery.events;
 
 import guru.sfg.brewery.modal.BeerOrderDto;
 import lombok.AllArgsConstructor;

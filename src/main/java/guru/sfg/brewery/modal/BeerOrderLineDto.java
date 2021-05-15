@@ -49,7 +49,7 @@ public class BeerOrderLineDto{
     private String beerName;
     private UUID beerId;
     private Integer orderQuantity = 0;
-
+    private Integer quantityAllocated;
     private String beerStyle;
     private BigDecimal price;
 }

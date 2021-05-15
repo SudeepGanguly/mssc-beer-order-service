@@ -5,6 +5,7 @@ import guru.sfg.beer.order.service.domain.BeerOrderEvents;
 import guru.sfg.beer.order.service.domain.BeerOrderStatusEnum;
 import guru.sfg.beer.order.service.repositories.BeerOrderRepository;
 import guru.sfg.beer.order.service.sm.BeerOrderManagerInterceptor;
+import guru.sfg.brewery.modal.BeerOrderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -14,6 +15,8 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -35,6 +38,16 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         return savedBeerOrder;
     }
 
+    @Override
+    public void processValidationResult(UUID beerOrderId, boolean isValid) {
+        BeerOrder beerOrder = beerOrderRepository.getOne(beerOrderId);
+        if(isValid){
+            sendBeerEvent(beerOrder,BeerOrderEvents.VALIDATION_PASSED);
+        } else {
+            sendBeerEvent(beerOrder,BeerOrderEvents.VALIDATION_FAILED);
+        }
+    }
+
     //create the message for sending event and send the event
     public void sendBeerEvent(BeerOrder beerOrder , BeerOrderEvents events){
         StateMachine<BeerOrderStatusEnum, BeerOrderEvents> sm = build(beerOrder);
@@ -45,6 +58,7 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
 
         sm.sendEvent(msg);
     }
+
 
     //Method to build the State Machine and change the state
     private StateMachine<BeerOrderStatusEnum,BeerOrderEvents> build(BeerOrder beerOrder){
@@ -70,4 +84,6 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
 
         return sm;
     }
+
+
 }

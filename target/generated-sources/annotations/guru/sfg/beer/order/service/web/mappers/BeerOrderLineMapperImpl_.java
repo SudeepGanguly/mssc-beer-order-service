@@ -1,19 +1,25 @@
 package guru.sfg.beer.order.service.web.mappers;
 
 import guru.sfg.beer.order.service.domain.BeerOrderLine;
+import guru.sfg.beer.order.service.domain.BeerOrderLine.BeerOrderLineBuilder;
 import guru.sfg.brewery.modal.BeerOrderLineDto;
+import guru.sfg.brewery.modal.BeerOrderLineDto.BeerOrderLineDtoBuilder;
 import javax.annotation.processing.Generated;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-05-14T11:41:19+0530",
-    comments = "version: 1.3.0.Final, compiler: javac, environment: Java 13.0.1 (Oracle Corporation)"
+    date = "2021-05-16T13:23:08+0530",
+    comments = "version: 1.4.1.Final, compiler: javac, environment: Java 13.0.1 (Oracle Corporation)"
 )
 @Component
 @Qualifier("delegate")
 public class BeerOrderLineMapperImpl_ implements BeerOrderLineMapper {
+
+    @Autowired
+    private DateMapper dateMapper;
 
     @Override
     public BeerOrderLineDto beerOrderLineToDto(BeerOrderLine line) {
@@ -21,9 +27,20 @@ public class BeerOrderLineMapperImpl_ implements BeerOrderLineMapper {
             return null;
         }
 
-        BeerOrderLineDto beerOrderLineDto = new BeerOrderLineDto();
+        BeerOrderLineDtoBuilder beerOrderLineDto = BeerOrderLineDto.builder();
 
-        return beerOrderLineDto;
+        beerOrderLineDto.id( line.getId() );
+        if ( line.getVersion() != null ) {
+            beerOrderLineDto.version( line.getVersion().intValue() );
+        }
+        beerOrderLineDto.createdDate( dateMapper.asOffsetDateTime( line.getCreatedDate() ) );
+        beerOrderLineDto.lastModifiedDate( dateMapper.asOffsetDateTime( line.getLastModifiedDate() ) );
+        beerOrderLineDto.upc( line.getUpc() );
+        beerOrderLineDto.beerId( line.getBeerId() );
+        beerOrderLineDto.orderQuantity( line.getOrderQuantity() );
+        beerOrderLineDto.quantityAllocated( line.getQuantityAllocated() );
+
+        return beerOrderLineDto.build();
     }
 
     @Override
@@ -32,8 +49,19 @@ public class BeerOrderLineMapperImpl_ implements BeerOrderLineMapper {
             return null;
         }
 
-        BeerOrderLine beerOrderLine = new BeerOrderLine();
+        BeerOrderLineBuilder beerOrderLine = BeerOrderLine.builder();
 
-        return beerOrderLine;
+        beerOrderLine.id( dto.getId() );
+        if ( dto.getVersion() != null ) {
+            beerOrderLine.version( dto.getVersion().longValue() );
+        }
+        beerOrderLine.createdDate( dateMapper.asTimestamp( dto.getCreatedDate() ) );
+        beerOrderLine.lastModifiedDate( dateMapper.asTimestamp( dto.getLastModifiedDate() ) );
+        beerOrderLine.beerId( dto.getBeerId() );
+        beerOrderLine.orderQuantity( dto.getOrderQuantity() );
+        beerOrderLine.upc( dto.getUpc() );
+        beerOrderLine.quantityAllocated( dto.getQuantityAllocated() );
+
+        return beerOrderLine.build();
     }
 }

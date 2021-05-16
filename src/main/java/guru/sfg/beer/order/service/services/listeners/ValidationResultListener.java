@@ -1,9 +1,8 @@
 package guru.sfg.beer.order.service.services.listeners;
 
 import guru.sfg.beer.order.service.config.JmsConfig;
-import guru.sfg.beer.order.service.domain.BeerOrderEvents;
 import guru.sfg.beer.order.service.services.BeerOrderManagerImpl;
-import guru.sfg.brewery.events.ValidateOrderResult;
+import guru.sfg.brewery.modal.events.ValidateOrderResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
@@ -22,7 +21,7 @@ private final BeerOrderManagerImpl manager;
         final UUID beerOrderId = result.getOrderId();
 
         log.debug("Validation result for Order Id "+ beerOrderId);
-
+        System.out.println(" ValidationResultListener in lIsteners");
         manager.processValidationResult(beerOrderId,result.isValid());
 
     }

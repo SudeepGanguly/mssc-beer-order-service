@@ -6,6 +6,7 @@ import guru.sfg.brewery.modal.BeerDTO;
 import guru.sfg.brewery.modal.BeerOrderLineDto;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ public abstract class BeerOrderLineDecorator implements BeerOrderLineMapper{
     private  BeerService beerService;
 
     @Autowired
+    @Qualifier("delegate")
     public void setBeerOrderLineMapper(BeerOrderLineMapper beerOrderLineMapper){
         this.beerOrderLineMapper=beerOrderLineMapper;
     }

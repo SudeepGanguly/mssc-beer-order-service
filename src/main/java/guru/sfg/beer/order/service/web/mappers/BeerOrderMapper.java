@@ -20,7 +20,6 @@ package guru.sfg.beer.order.service.web.mappers;
 import guru.sfg.beer.order.service.domain.BeerOrder;
 import guru.sfg.brewery.modal.BeerOrderDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(uses = {DateMapper.class, BeerOrderLineMapper.class})
 public interface BeerOrderMapper {

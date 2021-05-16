@@ -128,11 +128,6 @@ public class BeerOrderManagerImplIT {
                     foundOrder.getOrderStatus());
         });
 
-        AllocationFailureEvent allocationFailureEvent = (AllocationFailureEvent) jmsTemplate
-                                                .receiveAndConvert(JmsConfig.ALLOCATE_FAILURE_QUEUE);
-
-        assertNotNull(allocationFailureEvent);
-        assertThat(allocationFailureEvent.getOrderId()).isEqualTo(savedBeerOrder.getId());
     }
 
 
@@ -152,6 +147,12 @@ public class BeerOrderManagerImplIT {
             assertEquals(BeerOrderStatusEnum.ALLOCATION_EXCEPTION ,
                     foundOrder.getOrderStatus());
         });
+
+        AllocationFailureEvent allocationFailureEvent = (AllocationFailureEvent) jmsTemplate
+                .receiveAndConvert(JmsConfig.ALLOCATE_FAILURE_QUEUE);
+
+        assertNotNull(allocationFailureEvent);
+        assertThat(allocationFailureEvent.getOrderId()).isEqualTo(savedBeerOrder.getId());
     }
 
     @Test

@@ -24,6 +24,7 @@ public class BeerOrderStateMachineConfig extends StateMachineConfigurerAdapter<B
     private final Action<BeerOrderStatusEnum,BeerOrderEvents> allocateOrderAction;
     private final Action<BeerOrderStatusEnum,BeerOrderEvents> validationFailureAction;
     private final Action<BeerOrderStatusEnum,BeerOrderEvents> allocationFailureAction;
+    private final Action<BeerOrderStatusEnum,BeerOrderEvents> deallocateOrderAction;
 
     @Override
     public void configure(StateMachineStateConfigurer<BeerOrderStatusEnum, BeerOrderEvents> states) throws Exception {
@@ -99,8 +100,9 @@ public class BeerOrderStateMachineConfig extends StateMachineConfigurerAdapter<B
                 .withExternal()
                 .source(BeerOrderStatusEnum.ALLOCATED)
                 .target(BeerOrderStatusEnum.CANCELLED)
-                .event(BeerOrderEvents.CANCEL_ORDER);
-               //todo add an action
+                .event(BeerOrderEvents.CANCEL_ORDER)
+                .action(deallocateOrderAction);
+
 
     }
 

@@ -40,7 +40,8 @@ public class AllocateOrderAction implements Action<BeerOrderStatusEnum , BeerOrd
         beerOrderOptional.ifPresentOrElse(beerOrder -> {
             jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_BEER_ORDER_QUEUE,
                     AllocateBeerOrderRequest.builder()
-                            .beerOrder(beerOrderMapper.beerOrderToDto(beerOrder)));
+                            .beerOrder(beerOrderMapper.beerOrderToDto(beerOrder))
+                            .build());
 
             log.debug("Sent Allocation Request for order id: "+ orderId);
         },()-> log.debug("Valid Header not found"));

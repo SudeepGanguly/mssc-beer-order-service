@@ -23,6 +23,5 @@ private final BeerOrderManagerImpl manager;
         log.debug("Validation result for Order Id "+ beerOrderId);
         System.out.println(" ValidationResultListener in lIsteners");
         manager.processValidationResult(beerOrderId,result.isValid());
-
     }
 }

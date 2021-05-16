@@ -85,16 +85,25 @@ public class BeerOrderManagerImplIT {
                 .willReturn(okJson(objectMapper.writeValueAsString(beerDto))));
 
         BeerOrder beerOrder = createBeerOrder();
-        BeerOrder savedBeer = beerOrderManager.newBeerOrder(beerOrder);
+        BeerOrder savedBeerOrder = beerOrderManager.newBeerOrder(beerOrder);
+
 
         await().untilAsserted(()->{
             BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
-            assertEquals(BeerOrderStatusEnum.ALLOCATION_PENDING ,
-                                        foundOrder.getOrderStatus());
+            assertEquals(BeerOrderStatusEnum.ALLOCATED ,
+                    foundOrder.getOrderStatus());
         });
 
-        assertNotNull(savedBeer);
-        assertEquals(BeerOrderStatusEnum.ALLOCATED , savedBeer.getOrderStatus());
+                await().untilAsserted(()->{
+            BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
+            BeerOrderLine orderLine = foundOrder.getBeerOrderLines().iterator().next();
+            assertEquals(orderLine.getOrderQuantity(), orderLine.getQuantityAllocated());
+        });
+
+        BeerOrder savedBeerOrder2 = beerOrderRepository.findById(savedBeerOrder.getId()).get();
+
+        assertNotNull(savedBeerOrder2);
+        assertEquals(BeerOrderStatusEnum.ALLOCATED , savedBeerOrder2.getOrderStatus());
     }
 
     public BeerOrder createBeerOrder(){

@@ -39,9 +39,11 @@ public class BeerOrderManagerInterceptor extends
                 .ifPresent(orderId -> {
 
                          log.debug("Saving state in DB for Order id:"+orderId+" Status :"+state.getId());
-                         BeerOrder beerOrder = beerOrderRepository.getOne(UUID.fromString(orderId));
-                         beerOrder.setOrderStatus(state.getId());
-                        beerOrderRepository.save(beerOrder);
+                         Optional<BeerOrder> beerOrderOptional = beerOrderRepository.findById(UUID.fromString(orderId));
+                         beerOrderOptional.ifPresentOrElse(beerOrder -> {
+                             beerOrder.setOrderStatus(state.getId());
+                             beerOrderRepository.saveAndFlush(beerOrder);
+                         },()-> log.debug("In Interceptor , Order Not found to be saved"));
                     });
         }
 

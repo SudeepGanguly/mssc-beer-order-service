@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jenspiegsa.wiremockextension.WireMockExtension;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import guru.sfg.beer.order.service.config.JmsConfig;
 import guru.sfg.beer.order.service.domain.BeerOrder;
 import guru.sfg.beer.order.service.domain.BeerOrderLine;
 import guru.sfg.beer.order.service.domain.BeerOrderStatusEnum;
@@ -15,6 +16,7 @@ import guru.sfg.beer.order.service.services.BeerServiceImpl;
 import guru.sfg.brewery.modal.BeerDTO;
 import guru.sfg.brewery.modal.BeerOrderPagedList;
 import guru.sfg.brewery.modal.BeerPagedList;
+import guru.sfg.brewery.modal.events.AllocationFailureEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +33,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -55,6 +58,8 @@ public class BeerOrderManagerImplIT {
     @Autowired
     WireMockServer wireMockServer;
 
+    @Autowired
+    JmsTemplate jmsTemplate;
 
     Customer testCustomer;
 
@@ -122,6 +127,12 @@ public class BeerOrderManagerImplIT {
             assertEquals(BeerOrderStatusEnum.VALIDATION_EXCEPTION ,
                     foundOrder.getOrderStatus());
         });
+
+        AllocationFailureEvent allocationFailureEvent = (AllocationFailureEvent) jmsTemplate
+                                                .receiveAndConvert(JmsConfig.ALLOCATE_FAILURE_QUEUE);
+
+        assertNotNull(allocationFailureEvent);
+        assertThat(allocationFailureEvent.getOrderId()).isEqualTo(savedBeerOrder.getId());
     }
 
 

@@ -16,6 +16,7 @@ public class JmsConfig {
     public static final String VALIDATE_ORDER_RESULT = "validate-order-result";
     public static final String ALLOCATE_BEER_ORDER_QUEUE = "allocate-beer-order";
     public static final String ALLOCATE_ORDER_RESULT_QUEUE = "allocate-order-result";
+    public static final String ALLOCATE_FAILURE_QUEUE = "allocation-queue";
 
     @Bean
     public MessageConverter messageConverter(ObjectMapper objectMapper){

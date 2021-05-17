@@ -21,19 +21,25 @@ public class BeerOrderAllocationListener {
     public void listen(Message msg){
         boolean allocationError = false;
         boolean pendingInventory = false;
+        boolean sendResponse = true;
+
         AllocateBeerOrderRequest request = (AllocateBeerOrderRequest) msg.getPayload();
 
         log.debug("Recieved the allocation request for beer orderId :"
                                                         +request.getBeerOrder().getId());
 
-        if(request.getBeerOrder().getCustomerRef() != null &&
-                request.getBeerOrder().getCustomerRef().equals("fail-allocation")){
-            allocationError=true;
+        if(request.getBeerOrder().getCustomerRef() != null){
+            if(request.getBeerOrder().getCustomerRef().equals("fail-allocation")){
+                allocationError=true;
+            }
+            if(request.getBeerOrder().getCustomerRef().equals("partial-allocation")){
+                pendingInventory=true;
+            }
+            if (request.getBeerOrder().getCustomerRef().equals("dont-allocate")){
+                sendResponse = false;
+            }
         }
-        if(request.getBeerOrder().getCustomerRef() != null &&
-                request.getBeerOrder().getCustomerRef().equals("partial-allocation")){
-            pendingInventory=true;
-        }
+
 
         boolean finalPendingInventory = pendingInventory;
         request.getBeerOrder().getBeerOrderLines().forEach(beerOrderLineDto -> {
@@ -50,11 +56,13 @@ public class BeerOrderAllocationListener {
         log.debug("Sending back the successfull allocation result for beer order Id"
                                                         +request.getBeerOrder().getId());
 
-        jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_RESULT_QUEUE,
-                AllocateBeerOrderResult.builder()
-                            .beerOrderDto(request.getBeerOrder())
-                            .allocationError(allocationError)
-                            .pendingInventory(pendingInventory)
-                            .build());
+       if(sendResponse){
+           jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_RESULT_QUEUE,
+                   AllocateBeerOrderResult.builder()
+                           .beerOrderDto(request.getBeerOrder())
+                           .allocationError(allocationError)
+                           .pendingInventory(pendingInventory)
+                           .build());
+       }
     }
 }
